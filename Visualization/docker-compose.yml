@@ -1,0 +1,8 @@
+version: "3"
+services:
+  metabase:
+    build: ./metabase
+    volumes:
+        - ./metabase/data:/metabase.db:cached
+    ports:
+        - "81:3000"

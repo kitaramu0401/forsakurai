@@ -1,0 +1,32 @@
+version: '3'
+services:
+  mysql57:
+    image: mysql:5.7
+    volumes:
+      - "./mysql57/data:/var/lib/mysql"
+      - "./mysql57/init:/docker-entrypoint-initdb.d"
+    environment:
+      - MYSQL_DATABASE=metabase
+      - MYSQL_USER=metabase
+      - MYSQL_PASSWORD=metabase
+      - MYSQL_ROOT_PASSWORD=metabase
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - "3306:3306"
+  metabase:
+    image: metabase/metabase:latest
+    volumes:
+      - ./core/data:/metabase.db:cached
+    environment:
+      - MB_DB_TYPE=mysql
+      - MB_DB_DBNAME=metabase
+      - MB_DB_PORT=3306
+      - MB_DB_USER=metabase
+      - MB_DB_PASS=metabase
+      - MB_DB_HOST=mysql57
+    links:
+      - mysql57
+    depends_on:
+      - "mysql57"
+    ports:
+      - "3000:3000"
